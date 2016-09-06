@@ -1,3 +1,8 @@
+body {
+    padding: 50px 300px;
+    margin: 0px;
+}
+
 td {
 
     padding: 2px;
@@ -21,3 +26,16 @@ td > div {
      
  }
 
+
+ 
+ .left {
+     float: left;
+ }
+ 
+ .right {
+     float: right;
+ }
+ 
+ .right p {
+     margin: 0px;
+ }
