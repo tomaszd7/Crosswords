@@ -1,0 +1,23 @@
+td {
+
+    padding: 2px;
+    border: 1px #AAA solid;
+    background: #EEE;
+    margin: 2px;
+}
+
+td > div {
+    width: 17px;
+    height: 17px;
+    text-align: center;
+}
+
+
+
+ /*grid styling*/
+ 
+ .active {
+     background: #888;
+     
+ }
+
