@@ -13,10 +13,14 @@ $app = new Crossword();
     </head>
     <body>
         <!--control buttons--> 
-        <section>
+        <section class="header">
             <form method="POST">
                 <input type="submit" name="reset" value="Reset Grid" />
             </form>
+            <?php $headerFields = $app->getHeaderFields(); ?>
+            <p>All words: <span><?php echo $headerFields['allWords']; ?></span></p>
+            <p>Placed words: <span><?php echo $headerFields['placedWords']; ?></span></p>
+            <p>Omitted words: <span><?php echo $headerFields['omittedWords']; ?></span></p>
         </section>
         
         <!--display crossword-->

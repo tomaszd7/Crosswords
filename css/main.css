@@ -17,7 +17,10 @@ td > div {
     text-align: center;
 }
 
-
+.header p , .header form{
+    display: inline-block;
+    margin-right: 40px;
+}
 
  /*grid styling*/
  
