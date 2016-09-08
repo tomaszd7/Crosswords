@@ -25,7 +25,6 @@ class Crossword {
     private $sequenceWords = [];
     // temporary variables 
     private $commonLetter;
-
 //        'letter' => $word1[$i],
 //        'posInFirst' => $i,
 //        'posInSecond' => $pos --- to jest wzgledna numeracja a nie bezwzgledna!!!
@@ -46,46 +45,56 @@ class Crossword {
     }
 
     private function algorithmOne() {
+        // TO DO add to go through all placed words when searching for fit 
+        // ADDED checks all common letter 
+        // ADDED places word on first good fit 
         $counter = 2;
         do {
-            $word2 = $this->getRandomWord(); 
+            $word2 = $this->getRandomWord();
             $length = strlen($word2);
 
-            // get previous - last word
-            $word1Array = end($this->sequenceWords);
-            // find common letter 
+            // CHECK ALL WORDS A NOT ONLY LAST             
+            $notPlaced = true;
+            // loop all placed words starting from the last one 
+            for ($index = count($this->sequenceWords) - 1; $index >= 0 ; $index--) {
+                
+                $word1Array = $this->sequenceWords[$index];                                
+                // for 2 fetched words try if they have common letters and if they can anyhow fit 
+                if ($this->findAllCommonLetters($word1Array['word'], $word2)) {
+                    // calc new word position - is always taking opposite direction
+                    // commonIndex to numer wspolnej litery jeden z tablicy 
+                    $commonIndex = -1;
+                    do {
+                        $commonIndex++;
+                        list($x, $y, $direction) = $this->calcNewWordPosition($word1Array, $commonIndex);
 
-            // add searching for all letters in last word and not only first 
-            
-            if ($this->findAllCommonLetters($word1Array['word'], $word2)) {
-                // calc new word position - is always taking opposite direction
-                $commonIndex = 0;
-//                if ($counter> 2) {
-//                    var_dump($this->commonLetters, '<br>');
-//                }
-                list($x, $y, $direction) = $this->calcNewWordPosition($word1Array, $commonIndex);
-
-//                var_dump($x, $y, $length, $direction, $word2, '<br/>');
-//                var_dump($this->commonLetter, '<br/>');
-                if ($this->ifCanPlaceWord($x, $y, $length, $direction, $word2, $commonIndex)) {
-                    // place word 2        
-                    $this->placeWord($x, $y, $length, $direction, $word2);
-                    $this->addToSequenceWords($x, $y, $length, $direction, $word2, $counter);
-                } else {
-                    $this->omittedWords[] =  ' No. '. $counter . ' '.$word2;                    
+                        if ($this->ifCanPlaceWord($x, $y, $length, $direction, $word2, $commonIndex)) {
+                            // place word 2        
+                            $this->placeWord($x, $y, $length, $direction, $word2);
+                            $this->addToSequenceWords($x, $y, $length, $direction, $word2, $counter);
+                            $notPlaced = false;
+                        }
+                    } while ($notPlaced && $commonIndex !== count($this->commonLetters) - 1);
                 }
-            } 
-            
-            else {
-                $this->omittedWords[] =  ' No. '. $counter. ' NO COMMON ' .$word2;  
-//                var_dump($word1Array , '<br/>');
-//                var_dump($this->commonLetter, '<br/>');
-//                $this->addToSequenceWords(0, 0, $length, 'NONE', $word2);
+                // if word was placed - do not search for other words on board 
+                if ($notPlaced === false) {
+                    break;
+                }    
             }
+            // add to omitted words if word was not placed 
+            if ($notPlaced === true) {
+                $this->omittedWords[] = ' No. ' . $counter . ' ' . $word2;
+            }            
+            
             $counter++;
         } while ($counter < 9);
     }
 
+    private function algorithOneBody($word1, $word2) {
+        
+    }
+    
+    
     private function countOriginWords() {
         $this->originWordsCount = count($this->words);
     }
@@ -103,7 +112,7 @@ class Crossword {
                 if (!$this->isGoodFieldAround($x + $length, $y + $i)) {
 //                    var_dump($x + $length, $y + $i);
                     return false;
-                }                
+                }
             }
             for ($i = 0; $i < $length; $i++) {
                 $letter = $word2[$i];
@@ -122,7 +131,7 @@ class Crossword {
                 }
             }
         }
-        if ($direction === 'V') {            
+        if ($direction === 'V') {
             for ($i = -1; $i <= 1; $i++) {
                 // row before word 
                 if (!$this->isGoodFieldAround($x + $i, $y - 1)) {
@@ -133,8 +142,8 @@ class Crossword {
                 if (!$this->isGoodFieldAround($x + $i, $y + $length)) {
 //                    var_dump($x + $i, $y + $length);
                     return false;
-                }                
-            }            
+                }
+            }
             for ($i = 0; $i < $length; $i++) {
                 $letter = $word2[$i];
                 if (!$this->isGoodFieldOn($x, $y + $i, $letter)) {
@@ -167,7 +176,7 @@ class Crossword {
 
     private function findFirstCommonLetter($word1, $word2) {
         // sets the new x y of the new word ... a nie jakies pomiedzy
-        
+
         for ($i = 0; $i < strlen($word1); $i++) {
             $pos = strpos($word2, $word1[$i]);
             if ($pos !== false) { // czyli zero tez bierze za false!!! a ma szukac tylko false
@@ -181,33 +190,29 @@ class Crossword {
         }
         return false;
     }
+
 // TO DO napisac funkcje ktora wyszukuje wszystkie wspolne wyrazy dla 2 
-    
+
     private function findAllCommonLetters($word1, $word2) {
         // sets the new x y of the new word ... a nie jakies pomiedzy      
-        // trzeba dodac przesuwajacy sie wskaznik
-        // trzeba czyscic !! - 
-        // TO DO na razie w drugim wyrazie nie szuka po wszystkim
         $this->commonLetters = [];
-        $pointer = 0;
         for ($i = 0; $i < strlen($word1); $i++) {
-            $pos = strpos(substr($word2, $pointer), $word1[$i]);
-            if ($pos !== false) { // czyli zero tez bierze za false!!! a ma szukac tylko false
-                $this->commonLetters[] = [
-                    'letter' => $word1[$i],
-                    'posInFirst' => $i,
-                    'posInSecond' => $pos + $pointer
-                ];
-                $pointer = $i;
+            for ($j = 0; $j < strlen($word2); $j++) {
+                if ($word1[$i] === $word2[$j]) {
+                    $this->commonLetters[] = [
+                        'letter' => $word1[$i],
+                        'posInFirst' => $i,
+                        'posInSecond' => $j
+                    ];
+                }
             }
         }
         if (count($this->commonLetters) > 0) {
             return true;
         }
-        return false;        
-        
+        return false;
     }
-    
+
     private function calcNewWordPosition($word1Array, $commonIndex) {
         // takes second word from $this->commonLetter 
         // return x y and direction of new word 
