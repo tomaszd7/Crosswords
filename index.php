@@ -20,6 +20,7 @@ $app = new Crossword();
             <?php $headerFields = $app->getHeaderFields(); ?>
             <p>All words: <span><?php echo $headerFields['allWords']; ?></span></p>
             <p>Placed words: <span><?php echo $headerFields['placedWords']; ?></span></p>
+            <p>First omitted: <span><?php echo $headerFields['firstOmitted']; ?></span></p>
             <p>Omitted words: <span><?php echo $headerFields['omittedWords']; ?></span></p>
         </section>
         
@@ -32,9 +33,13 @@ $app = new Crossword();
                     foreach ($crossword as $row) {
                         ?>
                         <tr>
-                            <?php foreach ($row as $cell) { ?>
-                                <td><div><?php echo $cell; ?></div></td>
-                        <?php } ?>     
+                            <?php foreach ($row as $cell) { 
+                                if ($cell === ' ') {?>
+                                    <td><div><?php echo $cell; ?></div></td>
+                                    <?php } else { ?>
+                                    <td class="cell-value"><div><?php echo $cell; ?></div></td>
+                                <?php } ?>                                     
+                            <?php } ?>     
                         </tr>
                     <?php } ?>                
                 </tbody>
@@ -42,7 +47,7 @@ $app = new Crossword();
         </section>
 
 
-        <section class="right">
+<!--        <section class="right">
             <?php $words = $app->getSequenceWords(); 
             foreach ($words as $word) {
                 foreach ($word as $key => $value) { ?>
@@ -51,7 +56,7 @@ $app = new Crossword();
                 <?php }?>
                     <hr>
             <?php }?>
-        </section>
+        </section>-->
 
         <script src="https://code.jquery.com/jquery-3.1.0.min.js"   integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>
         <script src="js/main.js"></script>

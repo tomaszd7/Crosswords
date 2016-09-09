@@ -1,11 +1,11 @@
 $(document).ready(function () {
-    $('td').click(function () {
-        if ($(this).hasClass('active')) {
-            $(this).children('div').html(' ');
-        } else {
-            $(this).children('div').html('A');
-        }
-        $(this).toggleClass('active');
 
+    $(window).keyup(function(event) {
+        if (event.keyCode === 13) {
+            console.log('Key is 13');
+//            $('input').submit();
+//            $.post('#', {'reset': 'Reset Grid'});
+            location.reload();
+        }
     })
 })

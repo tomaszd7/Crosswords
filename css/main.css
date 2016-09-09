@@ -1,20 +1,22 @@
 body {
-    padding: 0px 300px;
+    padding: 0px 200px;
     margin: 0px;
 }
 
 td {
-
     padding: 2px;
-    border: 1px #AAA solid;
-    background: #EEE;
     margin: 2px;
-}
 
+}
 td > div {
     width: 17px;
     height: 17px;
     text-align: center;
+}
+
+td.cell-value {
+    border: 1px #AAA solid;
+    background: #EEE;
 }
 
 .header p , .header form{
@@ -22,23 +24,20 @@ td > div {
     margin-right: 40px;
 }
 
- /*grid styling*/
- 
- .active {
-     background: #888;
-     
- }
+.left {
+    float: left;
+    width: 600px;
+}
 
+.left table {
+    margin: 40px auto 0 auto;
+    border-spacing: 1px;
+}
 
- 
- .left {
-     float: left;
- }
- 
- .right {
-     float: right;
- }
- 
- .right p {
-     margin: 0px;
- }
+.right {
+    float: right;
+}
+
+.right p {
+    margin: 0px;
+}
