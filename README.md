@@ -2,7 +2,8 @@
 
 Crossword generator.
 Works on 8 internal words.
+
 Algorithm: 
 - picks words randomly
-- fits new word with all placed words starting from the last 
-- when fitting, checks all possible common words and places with the first 
+- tries to fit new word with all placed words starting from the last 
+- checks all possible common letters between current 2 words and places with first match
