@@ -1,6 +1,6 @@
 # Crosswords
 
-Crossword generator.
+Crossword generator(PHP)
 Works on 8 internal words.
 
 Algorithm: 
