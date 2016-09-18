@@ -6,8 +6,8 @@ class Crossword {
 //     zwraca tablice w getCrossword()
 //     laczy sie z klasa Cookies by pobrac juz utworzona tablice 
 
-    private $width = 31;
-    private $height = 31;
+    private $width = 35;
+    private $height = 35;
     private $crossword = [];
     private $originWordsCount;
     private $omittedWords = [];
@@ -31,24 +31,28 @@ class Crossword {
     private $commonLetters = [];
 
     public function __construct() {
+        // passing words to functions as reference 
+
+        $this->createEmptyGrid();
+
+        if (Cookies::isUserWords()) {
+            $this->words = Cookies::$words;
+        }
+        else if (Cookies::isCookies()) {
+            $this->words = Cookies::$words;
+        }
 
         $this->countOriginWords();
 
-        if (!Cookies::isReset() && Cookies::isGrid()) {
-            $this->crossword = Cookies::getGrid();
-        } else {
-            $this->createEmptyGrid();
-//            $aWords = $this->words; // trzeba tu reference uzyc 
-            $this->placeFirstWord($this->words);
-            $this->algorithmOne($this->words);
-            // run again for omitted 
-            if (count($this->omittedWords) > 0) {
-                $this->firstOmitted = count($this->omittedWords);
-                $omittedWords = self::getValuesFromArray($this->omittedWords);
-                $this->omittedWords = [];
-                $this->algorithmOne($omittedWords, 'add');
-            }
-//            var_dump($this->getCrosswordSize($this->sequenceWords));
+        $this->placeFirstWord($this->words);
+        $this->algorithmOne($this->words);
+
+        // run again for omitted 
+        if (count($this->omittedWords) > 0) {
+            $this->firstOmitted = count($this->omittedWords);
+            $omittedWords = self::getValuesFromArray($this->omittedWords);
+            $this->omittedWords = [];
+            $this->algorithmOne($omittedWords, 'add');
         }
     }
 
@@ -58,12 +62,12 @@ class Crossword {
         // ADDED places word on first good fit 
         if ($phase === 'add') {
             $loopCount = $this->originWordsCount + count($aWords);
-            $counter = $this->originWordsCount + 1;            
-        } else {            
+            $counter = $this->originWordsCount + 1;
+        } else {
             $loopCount = $this->originWordsCount;
-            $counter = count($this->sequenceWords) + 1;            
+            $counter = count($this->sequenceWords) + 1;
         }
-        
+
         do {
             $word2 = $this->getRandomWord($aWords);
             $length = strlen($word2);
@@ -104,7 +108,7 @@ class Crossword {
             $counter++;
         } while ($counter <= $loopCount);
     }
-    
+
     private function sliceCrossword($cross) {
         $size = $this->getCrosswordSize($this->sequenceWords);
         $newCrossword = [];
@@ -116,8 +120,10 @@ class Crossword {
     }
 
     private function getCrosswordSize($cross) {
-        $xMax = 0; $xMin = $this->width - 1;
-        $yMax = 0; $yMin = $this->height - 1;
+        $xMax = 0;
+        $xMin = $this->width - 1;
+        $yMax = 0;
+        $yMin = $this->height - 1;
         foreach ($this->sequenceWords as $value) {
             if ($value['direction'] === 'V') {
                 $yLast = $value['y'] + $value['length'] - 1;
@@ -128,8 +134,8 @@ class Crossword {
                 $xLast = $value['x'] + $value['length'] - 1;
             } else {
                 $xLast = $value['x'];
-            }                        
-            
+            }
+
             if ($value['x'] < $xMin) {
                 $xMin = $value['x'];
             }
@@ -143,7 +149,7 @@ class Crossword {
                 $yMax = $yLast;
             }
         }
-        
+
         return [
             'xMin' => $xMin,
             'xMax' => $xMax,
@@ -151,7 +157,7 @@ class Crossword {
             'yMax' => $yMax
         ];
     }
-    
+
     private function countOriginWords() {
         $this->originWordsCount = count($this->words);
     }
@@ -220,6 +226,12 @@ class Crossword {
     }
 
     private function isGoodFieldAround($x, $y) {
+        try {
+            $this->crossword[$y][$x];
+        } catch (Exception $e) {
+            return false;
+        }
+
         if ($this->crossword[$y][$x] === ' ') {
             return true;
         }
@@ -357,7 +369,7 @@ class Crossword {
     private static function getStringFromArray($arr) {
         $result = '';
         foreach ($arr as $key => $value) {
-            $result .= $key.'. '.$value;            
+            $result .= $key . '. ' . $value;
         }
         return $result;
     }

@@ -12,6 +12,20 @@ $app = new Crossword();
         <link rel="stylesheet" href="css/main.css"/>
     </head>
     <body>
+        
+        <!-- 8 entry fields -->
+        
+        <div class="words">
+            <form>
+                <?php for ($i = 0; $i < 8; $i++) { ?>
+                    <input name="<?php echo $i; ?>" type="text"/>
+                    
+                <?php }; ?>
+                    <input type="submit" value="Submit"/>
+            </form>
+        </div>
+        
+        
         <!--control buttons--> 
         <section class="header">
             <form method="POST">
