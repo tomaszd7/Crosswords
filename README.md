@@ -2,7 +2,7 @@
 
 Crossword generator(PHP)
 
-Works on 8 internal words.
+Works on 8 internal or user words.
 
 Algorithm: 
 - picks words randomly
@@ -12,6 +12,6 @@ Algorithm:
 KNOWN BUGS: out of grid index when trying to fit word
 
 TO DO (optional): 
-- input fields for user words 
+- input fields for user words (DONE)
 - choose best crossword for fe. 10 random generations
 - cross edges of word can count as valid (now must be empty)
