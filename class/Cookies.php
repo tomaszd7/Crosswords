@@ -19,7 +19,6 @@ class Cookies {
             self::$words = [];
             for ($i = 0; $i < count($_GET); $i++) {
                 if (strlen(trim($_GET[$i])) >0) {
-//                    var_dump($_GET[$i], strlen(trim($_GET[$i])));
                     self::$words[] = trim($_GET[$i]);
                 }
             }
@@ -38,20 +37,5 @@ class Cookies {
             return false;
         }
     }
-
-//    public static function isGrid() {
-//        if (isset($_COOKIE['crossword'])) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-//    public static function getGrid() {
-//        return ['crossword' => json_decode($_COOKIE['crossword'], true)];
-//    }
-//
-//    public static function setGrid($crossword) {
-//        setcookie('crossword', json_encode($crossword));
-//    }    
     
 }
