@@ -2,7 +2,7 @@
 
 Crossword generator(PHP)
 
-Works on 8 internal words.
+Works on 8 internal or user words.
 
 Algorithm: 
 - picks words randomly
